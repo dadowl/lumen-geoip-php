@@ -13,6 +13,14 @@
 |
 */
 
-$router->get('/', function () use ($router) {
-    return $router->app->version();
-});
+
+use Illuminate\Http\Request;
+
+/*$router->get('/{ip}', function (Request $request, $ip) use ($router) {
+    dd($request->all());
+    return $ip;
+})->where('ip', '(.*)');*/
+$router->get('/', 'GeoIpController');
+
+
+//Route::get('/{parent_id}', 'Admin\ResourceController@getResources')->where('parent_id', '(.*)');
