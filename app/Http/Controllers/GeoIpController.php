@@ -39,8 +39,9 @@ class GeoIpController extends Controller
             "latitude" => $record->location->latitude,
             "longitude" => $record->location->longitude
         ];
-        header('Content-Type: application/json');
-        echo json_encode($data);
+        return response(json_encode($data))->withHeaders([
+            'Content-Type' => "application/json",
+        ]);
     }
 
 }
