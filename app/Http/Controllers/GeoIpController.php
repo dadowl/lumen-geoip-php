@@ -30,7 +30,6 @@ class GeoIpController extends Controller
             throw new BadRequestException("IP not found.");
         }
 
-
         $data = [
             "country" => $record->country->name,
             "subdivision" =>$record->mostSpecificSubdivision->name,
@@ -39,6 +38,7 @@ class GeoIpController extends Controller
             "latitude" => $record->location->latitude,
             "longitude" => $record->location->longitude
         ];
+        
         return response(json_encode($data))->withHeaders([
             'Content-Type' => "application/json",
         ]);
