@@ -35,7 +35,7 @@ class GeoIpController extends Controller
             "country" => $record->country->name,
             "subdivision" =>$record->mostSpecificSubdivision->name,
             "city" => $record->city->name,
-            "postel_code" => $record->postal->code,
+            "postal_code" => $record->postal->code,
             "latitude" => $record->location->latitude,
             "longitude" => $record->location->longitude
         ];
