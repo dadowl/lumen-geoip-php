@@ -3,6 +3,9 @@
 ## Requirements
 - PHP >= 8
 
+## Required packages:
+- https://github.com/maxmind/GeoIP2-php
+
 ## Usage
 Install Composer packages:
 > composer install
