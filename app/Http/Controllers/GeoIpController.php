@@ -58,6 +58,7 @@ class GeoIpController extends Controller
         return response()->json([
             "request" => [
                 "status" => "successful",
+                "message" => "",
                 "data" => [
                     "country" => $record->country->name,
                     "subdivision" =>$record->mostSpecificSubdivision->name,
