@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 //require_once 'vendor/autoload.php';
+use Exception;
 use GeoIp2\Database\Reader;
 use GeoIp2\Exception\AddressNotFoundException;
 use MaxMind\Db\Reader\InvalidDatabaseException;
@@ -14,33 +15,58 @@ class GeoIpController extends Controller
     /**
      * Provision a new web server.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function __invoke()
     {
         $ip = app('request')->get("ip");
+
         if ($ip == null){
-            throw new BadRequestException("IP not transmitted.");
+            return response()->json([
+                "request" => [
+                    "status" => "error",
+                    "message" => "IP not transmitted.",
+                    "data" => []
+                ]
+            ]);
         }
 
-        $reader = new Reader(storage_path('/app/GeoLite2-City.mmdb'));
+        try {
+            $reader = new Reader(storage_path('/app/GeoLite2-City.mmdb'));
+        } catch (Exception $e) {
+            return response()->json([
+                "request" => [
+                    "status" => "error",
+                    "message" => "Database not found.",
+                    "data" => []
+                ]
+            ]);
+        }
+
         try {
             $record = $reader->city($ip);
-        } catch (AddressNotFoundException $e) {
-            throw new BadRequestException("IP not found.");
+        } catch (Exception $e) {
+            return response()->json([
+                "request" => [
+                    "status" => "error",
+                    "message" => "IP not found.",
+                    "data" => []
+                ]
+            ]);
         }
 
-        $data = [
-            "country" => $record->country->name,
-            "subdivision" =>$record->mostSpecificSubdivision->name,
-            "city" => $record->city->name,
-            "postal_code" => $record->postal->code,
-            "latitude" => $record->location->latitude,
-            "longitude" => $record->location->longitude
-        ];
-        
-        return response(json_encode($data))->withHeaders([
-            'Content-Type' => "application/json",
+        return response()->json([
+            "request" => [
+                "status" => "successful",
+                "data" => [
+                    "country" => $record->country->name,
+                    "subdivision" =>$record->mostSpecificSubdivision->name,
+                    "city" => $record->city->name,
+                    "postal_code" => $record->postal->code,
+                    "latitude" => $record->location->latitude,
+                    "longitude" => $record->location->longitude
+                ]
+            ]
         ]);
     }
 
