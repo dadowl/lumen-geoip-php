@@ -21,13 +21,11 @@ class GeoIpController extends Controller
     {
         $ip = app('request')->get("ip");
 
-        if ($ip == null){
+        if ($ip == null) {
             return response()->json([
-                "request" => [
-                    "status" => "error",
-                    "message" => "IP not transmitted.",
-                    "data" => []
-                ]
+                "status" => "error",
+                "message" => "IP not transmitted.",
+                "data" => []
             ]);
         }
 
@@ -35,11 +33,9 @@ class GeoIpController extends Controller
             $reader = new Reader(storage_path('/app/GeoLite2-City.mmdb'));
         } catch (Exception $e) {
             return response()->json([
-                "request" => [
-                    "status" => "error",
-                    "message" => "Database not found.",
-                    "data" => []
-                ]
+                "status" => "error",
+                "message" => "Database not found.",
+                "data" => []
             ]);
         }
 
@@ -47,26 +43,22 @@ class GeoIpController extends Controller
             $record = $reader->city($ip);
         } catch (Exception $e) {
             return response()->json([
-                "request" => [
-                    "status" => "error",
-                    "message" => "IP not found.",
-                    "data" => []
-                ]
+                "status" => "error",
+                "message" => "IP not found.",
+                "data" => []
             ]);
         }
 
         return response()->json([
-            "request" => [
-                "status" => "successful",
-                "message" => "",
-                "data" => [
-                    "country" => $record->country->name,
-                    "subdivision" =>$record->mostSpecificSubdivision->name,
-                    "city" => $record->city->name,
-                    "postal_code" => $record->postal->code,
-                    "latitude" => $record->location->latitude,
-                    "longitude" => $record->location->longitude
-                ]
+            "status" => "successful",
+            "message" => "",
+            "data" => [
+                "country" => $record->country->name,
+                "subdivision" => $record->mostSpecificSubdivision->name,
+                "city" => $record->city->name,
+                "postal_code" => $record->postal->code,
+                "latitude" => $record->location->latitude,
+                "longitude" => $record->location->longitude
             ]
         ]);
     }
