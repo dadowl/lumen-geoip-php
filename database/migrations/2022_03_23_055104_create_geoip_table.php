@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('geoip', function (Blueprint $table) {
+        Schema::create('GeoIP', function (Blueprint $table) {
             $table->id();
             $table->string("common_name");
             $table->string("real_address");
