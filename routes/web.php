@@ -21,6 +21,6 @@ use Illuminate\Http\Request;
     return $ip;
 })->where('ip', '(.*)');*/
 $router->get('/', 'GeoIpController');
-
+$router->get('/save-data', 'DataController');
 
 //Route::get('/{parent_id}', 'Admin\ResourceController@getResources')->where('parent_id', '(.*)');
