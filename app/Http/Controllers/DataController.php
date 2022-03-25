@@ -24,7 +24,6 @@ class DataController extends Controller
         $ip = app('request')->get("ip");
         $local_ip = app('request')->get("local_ip");
 
-
         if ($vpn_name == null || $ip == null || $local_ip == null){
             return response()->json([
                 "status" => "error",
