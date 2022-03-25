@@ -15,13 +15,12 @@ return new class extends Migration
     {
         Schema::create('GeoIP', function (Blueprint $table) {
             $table->id();
-            $table->string("common_name");
-            $table->string("real_address");
-            $table->string("status_path");
-            $table->string("virtual_address");
+            $table->string("vpn_name");
+            $table->string("ip");
+            $table->string("local_ip");
 
-            $table->float("lat");
-            $table->float("long");
+            $table->float("latitude");
+            $table->float("longitude");
 
             $table->boolean("is_deprecated")->default(false);
         });
