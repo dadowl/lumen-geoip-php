@@ -24,6 +24,14 @@ class DataController extends Controller
         $ip = app('request')->get("ip");
         $local_ip = app('request')->get("local_ip");
 
+
+        if ($vpn_name == null || $ip == null || $local_ip == null){
+            return response()->json([
+                "status" => "error",
+                "message" => "Required parameters not passed.",
+            ]);
+        }
+
         $model = new GeoIP();
 
         $model->vpn_name = $vpn_name;
