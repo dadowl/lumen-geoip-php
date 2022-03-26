@@ -32,6 +32,7 @@ class DataController extends Controller
         }
 
         $model = new GeoIP();
+        $checkedIP = explode(":",$ip)[0];
 
         $model->vpn_name = $vpn_name;
         $model->ip = $ip;
@@ -47,7 +48,7 @@ class DataController extends Controller
         }
 
         try {
-            $record = $reader->city($ip);
+            $record = $reader->city($checkedIP);
         } catch (Exception $e) {
             return response()->json([
                 "status" => "error",
@@ -58,19 +59,26 @@ class DataController extends Controller
         $model->latitude = $record->location->latitude;
         $model->longitude = $record->location->longitude;
 
-        try {
-            $model->save();
-        } catch (Exception $e) {
+        if ($model->checkExists()){
             return response()->json([
                 "status" => "error",
-                "message" => "Internal Server Error ".$e,
+                "message" => "Already exists.",
+            ]);
+        } else {
+            try {
+                $model->save();
+            } catch (Exception $e) {
+                return response()->json([
+                    "status" => "error",
+                    "message" => "Internal Server Error ".$e,
+                ]);
+            }
+            
+            return response()->json([
+                "status" => "successful",
+                "message" => "Saved",
             ]);
         }
-
-        return response()->json([
-            "status" => "successful",
-            "message" => "Saved",
-        ]);
     }
 
 }
