@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use Exception;
 use GeoIp2\Database\Reader;
 use GeoIp2\Exception\AddressNotFoundException;
+use Illuminate\Http\Request;
 use MaxMind\Db\Reader\InvalidDatabaseException;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
@@ -17,16 +18,17 @@ class GeoIpController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function __invoke()
+    public function __invoke(Request $request)
     {
         $ip = app('request')->get("ip");
 
         if ($ip == null) {
-            return response()->json([
+            /*return response()->json([
                 "status" => "error",
                 "message" => "IP not transmitted.",
                 "data" => []
-            ]);
+            ]);*/
+            $ip = $request->server('REMOTE_ADDR');
         }
 
         try {
