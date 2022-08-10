@@ -37,7 +37,8 @@ class GeoIpController extends Controller
             return response()->json([
                 "status" => "error",
                 "message" => "Database not found.",
-                "data" => []
+                "data" => [],
+                "request"=>[ 'ip' => $ip ]
             ]);
         }
 
@@ -47,7 +48,8 @@ class GeoIpController extends Controller
             return response()->json([
                 "status" => "error",
                 "message" => "IP not found.",
-                "data" => []
+                "data" => [],
+                "request"=>[ 'ip' => $ip ]
             ]);
         }
 
@@ -61,7 +63,8 @@ class GeoIpController extends Controller
                 "postal_code" => $record->postal->code,
                 "latitude" => $record->location->latitude,
                 "longitude" => $record->location->longitude
-            ]
+            ],
+            "request"=>[ 'ip' => $ip ]
         ]);
     }
 
