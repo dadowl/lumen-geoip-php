@@ -6,19 +6,10 @@ namespace App\Http\Controllers;
 use Exception;
 use GeoIp2\Database\Reader;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class GeoIpController extends Controller
 {
-
-    public function __construct(Request $request)
-    {
-        $this->validate(
-            $request, [
-                'ip' => 'ip',
-                'locale' => 'min:2|max:3|in:de,en,es,fr,ja,ru',
-            ]
-        );
-    }
 
     /**
      * Provision a new web server.
@@ -29,6 +20,34 @@ class GeoIpController extends Controller
     {
         $ip = $request->input("ip") ?? $request->server('REMOTE_ADDR');
         $locale = $request->input("locale") ?? env('APP_LOCALE', "en");
+
+        $validator = Validator::make(
+            compact('ip', 'locale'),
+            [
+                'ip' => 'ip',
+                'locale' => 'min:2|max:3|in:de,en,es,fr,ja,ru',
+            ]
+        );
+
+        if ($validator->fails()){
+            $data = [];
+
+            foreach ($validator->errors()->messages() as $key => $value){
+                $data[$key] = $value[0];
+            }
+
+            $json = [
+                "status" => "error",
+                "message" => "Validation error.",
+                "data" => $data,
+                "request"=>[
+                    'ip' => $ip,
+                    'locale' => $locale
+                ]
+            ];
+
+            return response()->json($json, 422);
+        }
 
         try {
             $reader = new Reader(storage_path(env('GEO_DATABASE_PATH', "/app/GeoLite2-City.mmdb")));
