@@ -27,16 +27,8 @@ class GeoIpController extends Controller
      */
     public function __invoke(Request $request)
     {
-        $ip = app('request')->input("ip", null);
-        $locale = env('APP_LOCALE', "en");
-
-        if ($ip === null) {
-            $ip = $request->server('REMOTE_ADDR');
-        }
-
-        if (app('request')->input("locale", null) !== null){
-            $locale = app('request')->input("locale", null);
-        }
+        $ip = $request->input("ip") ?? $request->server('REMOTE_ADDR');
+        $locale = $request->input("locale") ?? env('APP_LOCALE', "en");
 
         try {
             $reader = new Reader(storage_path(env('GEO_DATABASE_PATH', "/app/GeoLite2-City.mmdb")));
@@ -48,7 +40,7 @@ class GeoIpController extends Controller
                     'ip' => $ip,
                     'locale' => $locale
                 ]
-            ]);
+            ], 404);
         }
 
         try {
@@ -61,7 +53,7 @@ class GeoIpController extends Controller
                     'ip' => $ip,
                     'locale' => $locale
                 ]
-            ]);
+            ], 404);
         }
 
         if (!array_key_exists($locale, $record->country->names)) {
@@ -80,7 +72,7 @@ class GeoIpController extends Controller
                     'ip' => $ip,
                     'locale' => $locale
                 ]
-            ]);
+            ], 404);
         }
 
         return response()->json([
