@@ -109,7 +109,7 @@ class GeoIpController extends Controller
                 'ip' => $ip,
                 'locale' => $locale
             ]
-        ]);
+        ], 200, [], JSON_UNESCAPED_UNICODE);
     }
 
 }
