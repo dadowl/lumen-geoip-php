@@ -112,10 +112,10 @@ class GeoIpController extends Controller
         ], 200, [], JSON_UNESCAPED_UNICODE);
     }
 
-    function getCoolLocale(?array $array, string $key): string {
-        if ($array === null) return "";
+    function getCoolLocale(?array $array, string $key): ?string {
+        if ($array === null) return null;
         $fallkey = env('FALLBACK_LOCALE', "en");
-        return array_key_exists($key, $array) ? $array[$key] : (array_key_exists($fallkey, $array) ? $array[$fallkey] : "");
+        return array_key_exists($key, $array) ? $array[$key] : (array_key_exists($fallkey, $array) ? $array[$fallkey] : null);
     }
 
 }
