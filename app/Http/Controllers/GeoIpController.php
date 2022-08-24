@@ -98,9 +98,9 @@ class GeoIpController extends Controller
             "status" => "successful",
             "message" => "",
             "data" => [
-                "country" => $record->country->names[$locale],
-                "subdivision" => $record->mostSpecificSubdivision->names[$locale],
-                "city" => $record->city->names[$locale],
+                "country" => $this->getCoolLocale($record->country->names, $locale) ,
+                "subdivision" => $this->getCoolLocale($record->mostSpecificSubdivision->names, $locale),
+                "city" => $this->getCoolLocale($record->city->names, $locale),
                 "postal_code" => $record->postal->code,
                 "latitude" => $record->location->latitude,
                 "longitude" => $record->location->longitude
@@ -110,6 +110,12 @@ class GeoIpController extends Controller
                 'locale' => $locale
             ]
         ], 200, [], JSON_UNESCAPED_UNICODE);
+    }
+
+    function getCoolLocale(?array $array, string $key): string {
+        if ($array === null) return "";
+        $fallkey = env('FALLBACK_LOCALE', "en");
+        return array_key_exists($key, $array) ? $array[$key] : (array_key_exists($fallkey, $array) ? $array[$fallkey] : "");
     }
 
 }
