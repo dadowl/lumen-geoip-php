@@ -18,7 +18,7 @@ class GeoIpController extends Controller
      */
     public function __invoke(Request $request)
     {
-        $ip = $request->input("ip") ?? $request->server('REMOTE_ADDR');
+        $ip = $request->input("ip") ?? $request->server('HTTP_X_REAL_IP') ?? $request->server('REMOTE_ADDR');
         $locale = $request->input("locale") ?? env('APP_LOCALE', "en");
 
         $validator = Validator::make(
